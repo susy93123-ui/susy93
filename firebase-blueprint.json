@@ -1,0 +1,79 @@
+{
+  "entities": {
+    "MediaItem": {
+      "title": "MediaItem",
+      "description": "Learning media items including materials, worksheets, games, interactive media, and teaching modules",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 2000 },
+        "category": { 
+          "type": "string", 
+          "enum": ["materi", "lkpd", "media-interaktif", "game", "perangkat-ajar", "tka"] 
+        },
+        "grade": { "type": "number" },
+        "subject": { "type": "string", "maxLength": 100 },
+        "thumbnailUrl": { "type": "string", "maxLength": 500 },
+        "contentUrl": { "type": "string", "maxLength": 500 },
+        "fileType": { "type": "string", "maxLength": 50 },
+        "fileSize": { "type": "string", "maxLength": 50 },
+        "author": { "type": "string", "maxLength": 100 },
+        "viewsCount": { "type": "number" },
+        "downloadsCount": { "type": "number" },
+        "likesCount": { "type": "number" },
+        "curriculum": { "type": "string", "maxLength": 100 },
+        "semester": { "type": "number" },
+        "createdAt": { "type": "string", "maxLength": 50 },
+        "updatedAt": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "title", "category", "grade", "subject"]
+    },
+    "SiteSettings": {
+      "title": "SiteSettings",
+      "description": "Official school portal settings and metadata",
+      "type": "object",
+      "properties": {
+        "schoolName": { "type": "string", "maxLength": 200 },
+        "portalName": { "type": "string", "maxLength": 100 },
+        "slogan": { "type": "string", "maxLength": 300 },
+        "address": { "type": "string", "maxLength": 300 },
+        "phone": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "maxLength": 150 },
+        "academicYear": { "type": "string", "maxLength": 50 },
+        "aboutText": { "type": "string", "maxLength": 3000 },
+        "youtubeUrl": { "type": "string", "maxLength": 500 },
+        "instagramUrl": { "type": "string", "maxLength": 500 },
+        "tiktokUrl": { "type": "string", "maxLength": 500 }
+      },
+      "required": ["schoolName", "portalName", "email"]
+    },
+    "FeedbackMessage": {
+      "title": "FeedbackMessage",
+      "description": "Inquiries, suggestions, or requests sent by parents and teachers",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 150 },
+        "contact": { "type": "string", "maxLength": 150 },
+        "role": { "type": "string", "maxLength": 100 },
+        "message": { "type": "string", "maxLength": 3000 },
+        "createdAt": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["name", "contact", "message"]
+    }
+  },
+  "firestore": {
+    "/media_items/{mediaId}": {
+      "schema": { "$ref": "#/entities/MediaItem" },
+      "description": "Stores all learning media and instructional tools"
+    },
+    "/site_settings/{settingId}": {
+      "schema": { "$ref": "#/entities/SiteSettings" },
+      "description": "Stores configuration and institutional profile data"
+    },
+    "/feedback_messages/{messageId}": {
+      "schema": { "$ref": "#/entities/FeedbackMessage" },
+      "description": "Stores messages submitted through the contact page"
+    }
+  }
+}

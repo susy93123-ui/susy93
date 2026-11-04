@@ -1,0 +1,8 @@
+{
+  "name": "SIPID - SD Negeri Mendongan",
+  "description": "Sistem Inovasi Pembelajaran Interaktif Digital (SIPID) SD Negeri Mendongan merupakan portal belajar terpadu yang memadukan teknologi pembelajaran interaktif, gamifikasi dan perangkat kurikulum merdeka.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,68 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Test connection check
+    match /test/{docId} {
+      allow get: if true;
+    }
+
+    // Media Items Collection: Public educational library for teachers & pupils
+    match /media_items/{mediaId} {
+      function isValidMediaItem(data) {
+        return data.id is string && data.id.size() <= 128 &&
+               data.title is string && data.title.size() > 0 && data.title.size() <= 200 &&
+               data.category in ['materi', 'lkpd', 'media-interaktif', 'game', 'perangkat-ajar', 'tka'] &&
+               data.grade is number && data.grade >= 1 && data.grade <= 6 &&
+               data.subject is string && data.subject.size() <= 100;
+      }
+
+      allow get, list: if true;
+      allow create: if isValidId(mediaId) && isValidMediaItem(incoming());
+      allow update: if isValidId(mediaId) && isValidMediaItem(incoming());
+      allow delete: if isValidId(mediaId);
+    }
+
+    // Site Settings Collection: School institutional identity
+    match /site_settings/{settingId} {
+      function isValidSetting(data) {
+        return data.schoolName is string && data.schoolName.size() <= 200 &&
+               data.portalName is string && data.portalName.size() <= 100 &&
+               data.email is string && data.email.size() <= 150;
+      }
+
+      allow get, list: if true;
+      allow create, update: if isValidId(settingId) && isValidSetting(incoming());
+      allow delete: if false;
+    }
+
+    // Feedback Messages: Parent & teacher inquiries submitted from /kontak
+    match /feedback_messages/{messageId} {
+      function isValidMessage(data) {
+        return data.name is string && data.name.size() > 0 && data.name.size() <= 150 &&
+               data.contact is string && data.contact.size() > 0 && data.contact.size() <= 150 &&
+               data.message is string && data.message.size() > 0 && data.message.size() <= 3000;
+      }
+
+      allow create: if isValidId(messageId) && isValidMessage(incoming());
+      allow get, list: if false;
+      allow update, delete: if false;
+    }
+  }
+}
